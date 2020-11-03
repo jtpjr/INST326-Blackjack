@@ -11,13 +11,15 @@ class Deck:
     """
     This is a deck of cards
     """
-    def shuffle():
+    def shuffle(self):
         """
         This is a function to randomize the position of cards in the deck
         """
         
     def __init__():
-        "contrstructor for deck class"
+        """
+        contrstructor for deck class
+        """
 
     def shuffle(self):
         """Function to randomize the position of cards in the deck (shuffle)"""
