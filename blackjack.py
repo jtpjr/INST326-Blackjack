@@ -40,10 +40,41 @@ class Blackjack:
         return self.instance_deck.pop(0)
 
     def round(self):
+        # Initial bet
+        self.bet()
 
-        self.player_hand.append(draw())
+        # Cards are drawn
+        self.player_hand.append(self.draw())
+        self.dealer_hand.append(self.draw())
+        self.player_hand.append(self.draw())
+        self.dealer_hand.append(self.draw())
 
-    def bet(self, value):
+
+    def current_action(self):
+        """
+        Prints current actions
+        """
+
+    def bet(self):
+        """
+        Player bets
+        """
+        while True:
+            print("\nPlace your bet: $")
+            player_bet = int(input())
+
+            if player_bet <= self.player_purse:
+                self.pot += player_bet
+                self.player_purse -= player_bet
+                continue
+
+            print("\nBet exceeds current purse, try again")
+
+
+    def hit(self):
+
+
+    def stand(self):
 
 
     def fold(self):
@@ -79,7 +110,7 @@ class Card:
 
 class Deck:
     """
-    This is a deck of cards, as a list of tuples (suit, value)
+    This is a deck of cards, as a list of tuples (suit, value, name)
     """
         
     def __init__(self):
