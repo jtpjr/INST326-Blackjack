@@ -2,6 +2,10 @@ class Blackjack:
     """
     This class creates a command line game of blackjack
     """
+    def __init__():
+    """
+    constructor for the Blackjack class
+    """
     
 class Deck:
     """
@@ -9,3 +13,4 @@ class Deck:
     """
     def __init__():
         "contrstructor for deck class"
+    
