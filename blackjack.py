@@ -13,4 +13,6 @@ class Deck:
     """
     def __init__():
         "contrstructor for deck class"
-    
+
+    def shuffle(self):
+        """Function to randomize the position of cards in the deck (shuffle)"""
