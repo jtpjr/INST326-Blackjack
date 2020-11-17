@@ -1,5 +1,38 @@
 from random import shuffle
 
+class Deck:
+    """
+    This is a deck of cards, as a list of tuples (suit, value, name)
+    """
+
+    def __init__(self):
+        """
+        Constructor of the deck, creates 52 standard playing cards and shuffles them
+        """
+        self.cards = list()
+
+        suits = ["Clubs", "Diamonds", "Hearts", "Spades"]
+        names = {11: "Jack", 12: "Queen", 13: "King", 14: "Ace"}
+
+        for i in range(0, 4):
+            for j in range(2, 15):
+                if 2 <= j <= 10:
+                    self.cards.append((str(suits[i]), int(j), str(j)))
+                elif 10 < j < 15:
+                    self.cards.append((str(suits[i]), int(10), str(names[j])))
+                else:
+                    self.cards.append((str(suits[i]), 14, str(names[j])))
+
+        shuffle(self.cards)
+
+    def get_cards(self):
+        """
+        Returns: List of cards
+        """
+
+        return self.cards
+
+
 class Blackjack:
     """
     This class creates a command line game of blackjack against the computer (player vs dealer(CPU))
@@ -33,15 +66,20 @@ class Blackjack:
         self.dealer_count = 0
 
         # Sets pot to be an integer to hold current bet for current round
-        self.pot = int
+        self.pot = int()
 
         # Sets the master_deck to a list of 6 individual decks combined
         self.master_deck = list()
-        self.master_deck.append(Deck for i in range(0, 6))
-        shuffle(self.master_deck)
+
+        for i in range(0,6):
+            for card in Deck().get_cards():
+                self.master_deck.append(card)
 
         # Creates an instance_deck, which is a copy of the master deck to be used in play while preserving master_deck
-        self.instance_deck = list(self.master_deck)
+        self.instance_deck = list()
+
+        for i in self.master_deck:
+            self.instance_deck.append(i)
 
         # Sets the player_hand and dealer_hand to lists to hold current cards
         self.player_hand = list()
@@ -75,8 +113,14 @@ class Blackjack:
 
             # TODO: Ensure player_count updates after each hit
 
-            self.dealer_round()
+            # If dealer is not standing, run dealer round
+            if self.dealer_isStand is False:
+                self.dealer_round()
+
             # Check if dealer hand is bust, if so change game state
+            if self.dealer_isBust():
+                self.game_state = False
+
 
             self.turn_count += 1
 
@@ -90,7 +134,7 @@ class Blackjack:
 
         # Print current hand
         print("\nCurrent hand: ")
-        for i in self.player_hand:
+        for i in range(0, len(self.player_hand)):
             print(f"{self.player_hand[i][2]} of {self.player_hand[i][0]}")
             self.player_count += self.player_hand[i][1]
 
@@ -99,11 +143,11 @@ class Blackjack:
 
         # Print dealer's hand
         print("\nDealer's hand: ")
-        for i in self.dealer_hand:
+        for i in range(0, len(self.dealer_hand)):
             if i == 0:
                 print(f"{self.dealer_hand[i][2]} of {self.dealer_hand[i][0]}")
 
-            print(f"{len(self.dealer_hand) - 1} face-down card(s)")
+        print(f"{len(self.dealer_hand) - 1} face-down card(s)")
 
         # Print betting information
         print(f"\nPot: {self.pot}")
@@ -144,13 +188,13 @@ class Blackjack:
         Player bets
         """
         while True:
-            print("\nPlace your bet: $")
+            print("Place your bet: $")
             player_bet = int(input())
 
             if player_bet <= self.player_purse:
                 self.pot += player_bet
                 self.player_purse -= player_bet
-                continue
+                return
 
             print("\nBet exceeds current purse, try again")
 
@@ -164,12 +208,10 @@ class Blackjack:
         self.player_bet()
 
         # Adds top card from deck to player's hand
-
-
         new_card = self.draw()
 
         # Ace condition check (1 or 11)
-        if new_card[1] is 14:
+        if new_card[1] == 14:
             if (11 + self.player_count) > 21:
                 new_card[1] = 1
             else:
@@ -177,7 +219,7 @@ class Blackjack:
                     print("\nYou drew an ace. Would you like it to be a 1 or an 11?: ")
                     ace_value = int(input())
 
-                    if ace_value is 1 or 11:
+                    if ace_value == 1 or ace_value == 11:
                         new_card[1] = ace_value
                         self.player_hand.append(new_card)
                         continue
@@ -196,9 +238,13 @@ class Blackjack:
 
 
     def player_split(self):
+        ""
+        pass
 
 
     def player_double_down(self):
+        ""
+        pass
 
 
     def player_isBust(self):
@@ -211,13 +257,43 @@ class Blackjack:
         return self.player_count > 21
 
     def dealer_round(self):
+        ""
+
+        # Checks if first 2 cards received are Aces, and if so, set to 11 value
+        for i in self.dealer_hand:
+            if self.dealer_hand[i][1] == 14:
+                self.dealer_hand[i][1] = 11
 
         # Assess dealer count
         for i in self.dealer_hand:
             self.dealer_count += self.dealer_hand[i][1]
 
+        # Rules: https://blog.udemy.com/blackjack-rules-2/
+
+        if self.dealer_count < 16:
+            self.dealer_hit()
+
+            if self.dealer_hand[len(self.dealer_hand)-1][1] == 14:
+                self.dealer_hand[len(self.dealer_hand)-1][1] = 11
+            return
+
+        if self.dealer_count >= 17:
+
+            # If total is over 21, check for aces and change value from 11 to 1
+            if self.dealer_count > 21:
+                for i in self.dealer_hand:
+                    if self.dealer_hand[i][1] == 11:
+                        self.dealer_hand[i][1] = 1
+
+            return
+
 
     def dealer_hit(self):
+        ""
+        # Adds top card from deck to dealer's hand
+        new_card = self.draw()
+        self.dealer_hand.append(new_card)
+
 
 
     def dealer_stand(self):
@@ -236,52 +312,12 @@ class Blackjack:
         return self.dealer_count > 21
 
 
+class Blackjack_Test:
 
+    if __name__ == '__main__':
+        new_game = Blackjack()
 
-class Card:
-    """
-    This class makes a single card, with suit and value
-    """
-    def __init__(self, value, suit):
-        """
-        Constructor for card
+        while True:
+            new_game.game()
 
-        Args:
-            value: (int) value of card
-            suit: (str) suit of card
-            name: (str) name of card (2, king, ...)
-        """
-        self.suit = suit
-        self.value = value
-
-        names = {11:"Jack", 12:"Queen", 13:"King", 14:"Ace"}
-
-        if 2 <= value <= 10:
-            self.name = str(value)
-        else:
-            self.name = names[value]
-
-            # Reset face card values to 10 except ace which will retain identification as 14
-            if self.name != "Ace":
-                self.value = 10
-
-
-class Deck:
-    """
-    This is a deck of cards, as a list of tuples (suit, value, name)
-    """
-        
-    def __init__(self):
-        """
-        Constructor of the deck, creates 52 standard playing cards and shuffles them
-        """
-        self.cards = list()
-
-        suits = ["Clubs", "Diamonds", "Hearts", "Spades"]
-
-        for i in range(len(suits)):
-            for j in range(2, 15):
-                self.cards.append(Card(j, suits[i]))
-
-        shuffle(self.cards)
 
