@@ -42,10 +42,7 @@ class Blackjack:
         Constructor for the Blackjack game
 
         Args:
-            player_purse: Current integer value of player's purse optionally set by passed in argument
-            buy_in: Optionally set buy-in value for the player (default 250)
-            pot: Integer holding current bet for current round
-            master_deck: List of 6x Decks comprising tuples representing cards of tuples (suit, value)
+            buy_in: How much currency the player is entering the game with
         """
 
         # Tracker for number of turns
@@ -88,11 +85,16 @@ class Blackjack:
 
     def draw(self):
         """
+        Draws the first card in the deck
+
         Returns: Returns the top card (first card) in the deck
         """
         return self.instance_deck.pop(0)
 
     def game(self):
+        """
+        Structure of the game of blackjack itself
+        """
         # Initial player bet
         self.player_bet()
 
@@ -201,7 +203,8 @@ class Blackjack:
 
     def player_hit(self):
         """
-        Player hits
+        Player hits, which is to draw a card from the deck and add it to current hand. If ace, asks for 1 or 11 if
+        mathematically possible
         """
 
         # Calls for player to bet
@@ -238,12 +241,22 @@ class Blackjack:
 
 
     def player_split(self):
-        ""
+        """
+        Handling to allow the player to split current hand in two, and play both hands concurrently
+
+        Returns:
+
+        """
         pass
 
 
     def player_double_down(self):
-        ""
+        """
+        Handling to allow the player to double down during the initial round
+
+        Returns:
+
+        """
         pass
 
 
@@ -257,7 +270,12 @@ class Blackjack:
         return self.player_count > 21
 
     def dealer_round(self):
-        ""
+        """
+        Structured instructions for the dealer's hand.
+        Manages the CPU's decision making for competing against the player in game.
+
+        Returns: NaN
+        """
 
         # Checks if first 2 cards received are Aces, and if so, set to 11 value
         for i in self.dealer_hand:
@@ -289,7 +307,9 @@ class Blackjack:
 
 
     def dealer_hit(self):
-        ""
+        """
+        Dealer hits, which is to draw a card from the deck and add it to current hand.
+        """
         # Adds top card from deck to dealer's hand
         new_card = self.draw()
         self.dealer_hand.append(new_card)
