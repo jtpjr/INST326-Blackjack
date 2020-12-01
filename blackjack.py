@@ -190,8 +190,12 @@ class Blackjack:
                 self.player_double_down()
 
     def player_bet(self):
-        """
-        Player bets
+        """The player places their bets for that round.
+        If they want to sit out the round they can, 
+        but if they want to partake in this round they will place their monetary bets
+        and after that they cannot take it back.
+        
+        Returns: N/A
         """
         while True:
             print("Place your bet: $")
@@ -206,9 +210,13 @@ class Blackjack:
 
 
     def player_hit(self):
-        """
-        Player hits, which is to draw a card from the deck and add it to current hand. If ace, asks for 1 or 11 if
-        mathematically possible
+        """Player hits, which is to draw a card from the deck and add it to their current hand
+        in an attempt to get as close to 21 as possible. 
+        If they player recieves an ace card on their hit, 
+        they decide if they want it as a 1 or 11 if mathematically possible,
+        given the other cards in their hand.
+        
+        Returns: N/A
         """
 
         # Calls for player to bet
@@ -236,8 +244,12 @@ class Blackjack:
 
 
     def player_stand(self):
-        """
-        Sets player_isStand condition to True, passing turns
+        """Sets player_isStand condition to True, passing turns
+        When a player stands they are staying where they are for the 
+        round and do not want to take any more cards in hopes of being
+        closer to 21 than the dealer. 
+        
+        Returns: N/A
         """
 
         self.player_isStand = True
@@ -245,11 +257,10 @@ class Blackjack:
 
 
     def player_split(self):
-        """
-        Handling to allow the player to split current hand in two, and play both hands concurrently
+        """Handling to allow the player to split current hand in two, 
+        and play both hands concurrently
 
-        Returns:
-
+        Returns: N/A
         """
         pass
 
@@ -327,8 +338,10 @@ class Blackjack:
 
 
     def dealer_stand(self):
-        """
-        Sets dealer_isStand condition to True, passing turns
+        """Sets dealer_isStand condition to True, passing turns
+        When a dealer stands they are staying where they are for the 
+        round and do not want to take any more cards in hopes of being
+        closer to 21 than the player. 
         """
         self.dealer_isStand = True
 
