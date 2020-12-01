@@ -7,8 +7,12 @@ class Deck:
 
     def __init__(self):
         """
-        Constructor of the deck, creates 52 standard playing cards and shuffles them
+        Constructor of the deck, creates 52 standard playing cards and shuffles them. 
+        First, it nitializes the cards attribute to an empty list.  Then, it assigns suits to the list of suits 
+        and names to a dictionary called names with values (keys) and face card names (values).
+        Lastly, we populate the deck of cards by using a nested for loop.   
         """
+        
         self.cards = list()
 
         suits = ["Clubs", "Diamonds", "Hearts", "Spades"]
