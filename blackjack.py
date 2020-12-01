@@ -255,8 +255,10 @@ class Blackjack:
 
 
     def player_double_down(self):
-        """
-        Handling to allow the player to double down during the initial round
+        """Handling to allow the player to double down during the initial round.
+        Doubling down is a chance for the player to 
+        increase the value of your initial bet by up to 100 per cent. 
+        You can only double down on your initial turn and it doubles your bet.
 
         Returns:
 
@@ -265,20 +267,23 @@ class Blackjack:
 
 
     def player_isBust(self):
-        """
-        Determines if hand is bust for player
+        """Determines if hand is bust for player. 
+        A "bust hand" means that you went over 21 points 
+        and your hand was of no value at all and you lose. 
 
-        Returns: True if bust, false if not
+        Returns: Returns true if players hand is busted and false if not. 
         """
 
         return self.player_count > 21
 
     def dealer_round(self):
-        """
-        Structured instructions for the dealer's hand.
+        """Structured instructions for the dealer's hand. 
         Manages the CPU's decision making for competing against the player in game.
+        The computer/dealer is given the same options as the one playing the game.
+        They decide to get more cards or to stay where they are in an attempt to get 
+        closer to 21 than the player. 
 
-        Returns: NaN
+        Returns: N/A
         """
 
         # Checks if first 2 cards received are Aces, and if so, set to 11 value
@@ -311,8 +316,9 @@ class Blackjack:
 
 
     def dealer_hit(self):
-        """
-        Dealer hits, which is to draw a card from the deck and add it to current hand.
+        """Dealer hits, which is to draw a card from the deck and add it to current hand.
+        
+        Return: N/A
         """
         # Adds top card from deck to dealer's hand
         new_card = self.draw()
@@ -327,10 +333,11 @@ class Blackjack:
         self.dealer_isStand = True
 
     def dealer_isBust(self):
-        """
-        Determines if hand is bust for dealer
+        """Determines if hand is bust for dealer.
+        A "bust hand" means that you went over 21 points 
+        and your hand was of no value at all and you lose. 
 
-        Returns: True if bust, false if not
+        Returns: Returns true if dealers hand is busted and false if not. 
         """
 
         return self.dealer_count > 21
