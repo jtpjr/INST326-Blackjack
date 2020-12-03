@@ -2,7 +2,7 @@ from random import shuffle
 
 class Deck:
     """
-    This is a deck of cards, as a list of tuples (suit, value, name)
+    This is a deck of playing cards, as a list of tuples (suit, value, name)
     """
 
     def __init__(self):
@@ -11,6 +11,8 @@ class Deck:
         First, it initializes the cards attribute to an empty list.  Then, it assigns suits to the list of suits
         and names to a dictionary called names with values (keys) and face card names (values).
         Lastly, we populate the deck of cards by using a nested for loop.
+
+        Returns: N/A
         """
         self.cards = list()
 
@@ -30,6 +32,8 @@ class Deck:
 
     def get_cards(self):
         """
+        Getter for the list of cards as tuples (suit, value, name) for a standard set of playing cards.
+
         Returns: List of cards
         """
 
@@ -38,14 +42,20 @@ class Deck:
 
 class Blackjack:
     """
-    This class creates a command line game of blackjack against the computer (player vs dealer(CPU))
+    This class creates a command line game of blackjack against the computer (player vs dealer(CPU)). This class utilizes
+    the Deck class above to populate the deck of cards used in the game. The computer uses an algorithm to determine
+    which actions to take against the player, and the player can make the standard array of actions as per the rules
+    of blackjack.
     """
     def __init__(self, buy_in=250):
         """
-        Constructor for the Blackjack game
+        Constructor for the Blackjack game. Creates a multitude of variables for tracking various gamestates, as well as
+        tracking the player and CPU's hands and bets.
 
         Args:
             buy_in: How much currency the player is entering the game with
+
+        Returns: N/A
         """
 
         # Tracker for number of turns
@@ -88,15 +98,19 @@ class Blackjack:
 
     def draw(self):
         """
-        Draws the first card in the deck
+        Draws the first card in the deck, from the Instance deck created in the constructor.
 
-        Returns: Returns the top card (first card) in the deck
+        Returns: Returns the top card (first card) in the deck as a tuple (suit, value, name)
         """
         return self.instance_deck.pop(0)
 
     def game(self):
         """
-        Structure of the game of blackjack itself
+        Structure of the game of blackjack itself. Runs a looped game with constant resetting of variables, and
+        contiguous pot/purse tracking to ensure continuity between continued games. Prompts player at the end of each
+        game to quit.
+
+        Returns: N/A
         """
         # Initial player bet
         self.player_bet()
@@ -172,7 +186,11 @@ class Blackjack:
 
     def player_round(self):
         """
-        Dashboard for player to make actions
+        Dashboard for player to make actions. Prints current hand, status of pot and purse, and dealer's hand (flipped
+        card and total cards held). Makes determinations as to what action to show when, prompts user with a menu to
+        select next course of action, and ensures that player's input is valid.
+
+        Returns: N/A
         """
 
         print("\nYour Turn")
@@ -204,7 +222,10 @@ class Blackjack:
 
     def current_action(self):
         """
-        Prints current actions for player
+        Prints current actions for player. Makes determination as to which actions are available, prompts user for input,
+        verifies input, and executes corresponding action.
+
+        Returns: N/A
         """
 
         # Determine player action
