@@ -115,16 +115,27 @@ class Blackjack:
         # Initial player bet
         self.player_bet()
 
-        # Cards are drawn
-
-        #TODO: Add ace handling (Choose for player, pick for cpu)
         #TODO: Add count 21 handling for when blackjack is achieved (set hold status to true automatically in both dealer and player control structures)
-        self.player_hand.append(self.draw())
-        self.dealer_hand.append(self.draw())
-        self.player_hand.append(self.draw())
-        self.dealer_hand.append(self.draw())
 
         while True:
+            # Cards are drawn
+            for i in range(0, 2):
+                player_card = self.draw()
+                if player_card[1] == 14:
+                    print("\nYou drew an ace. Would you like it to be a 1 or 11?")
+                    while True:
+                        player_input = int(input())
+
+                        if player_input == 1 or player_input == 11:
+                            player_card = (player_card[0], player_input, player_card[2])
+                            break
+
+                        print("Input invalid, please try again")
+
+                self.player_hand.append(player_card)
+
+                self.dealer_hand.append(self.draw())
+
             while self.game_state is True:
                 # If player is not standing, prompt player with dashboard
                 if self.player_isStand is False and self.player_isBust() is False:
@@ -134,7 +145,7 @@ class Blackjack:
                 if self.player_isBust():
                     self.game_state = False
 
-                # TODO: Ensure player_count updates after each hit
+                # TODO: Fix order in which bust is determined (player busts, says dealer busts), and when checks occur
 
                 # If dealer is not standing, run dealer round
                 if self.dealer_isStand is False and self.dealer_isBust() is False:
@@ -144,8 +155,9 @@ class Blackjack:
                 if self.dealer_isBust():
                     self.game_state = False
 
-
                 self.turn_count += 1
+
+            #TODO: Fix printing of game end condition, and verify if correct
 
             while self.game_state is False:
                 if self.player_isBust():
@@ -154,33 +166,33 @@ class Blackjack:
                     break
                 else:
                     print("\nPlayer wins")
-                    self.player_purse += self.pot
+                    self.player_purse += (2 * self.pot)
                     self.pot = 0
                     break
 
+            while True:
+                print("\nPlay again? (y/n)")
+                player_input = str(input())
 
-            print("\nPlay again? (y/n)")
-            player_input = str(input())
+                if player_input == "y" or player_input == "Y":
+                    # Reset all values to defaults
+                    self.game_state = True
+                    self.player_hand = list()
+                    self.dealer_hand = list()
+                    self.turn_count = 1
+                    self.player_isStand = False
+                    self.dealer_isStand = False
+                    self.player_count = 0
+                    self.dealer_count = 0
+                    self.instance_deck = list()
 
-            if player_input == "y" or "Y":
-                # Reset all values to defaults
-                self.game_state = True
-                self.player_hand = list()
-                self.dealer_hand = list()
-                self.turn_count = 1
-                self.player_isStand = False
-                self.dealer_isStand = False
-                self.player_count = 0
-                self.dealer_count = 0
-                self.instance_deck = list()
+                    for i in self.master_deck:
+                        self.instance_deck.append(i)
+                    break
+                elif player_input == "n" or player_input == "N":
+                    quit()
 
-                for i in self.master_deck:
-                    self.instance_deck.append(i)
-                continue
-            elif player_input == "n" or "N":
-                quit()
-
-            print("\nInputted value is not a y or n, try again")
+                print("\nInputted value is not a y or n, try again")
 
 
 
@@ -253,6 +265,8 @@ class Blackjack:
             elif player_input == 4 and self.turn_count == 1:
                 self.player_double_down()
                 break
+            else:
+                print("Input was invalid, please try again")
 
     def player_bet(self):
         """
@@ -266,12 +280,12 @@ class Blackjack:
             print("Place your bet: $")
             player_bet = int(input())
 
-            if player_bet <= self.player_purse:
+            if player_bet <= self.player_purse and player_bet != 0:
                 self.pot += player_bet
                 self.player_purse -= player_bet
                 return
 
-            print("\nBet exceeds current purse, try again")
+            print("\nBet exceeds current purse or is 0, try again")
 
 
     def player_hit(self):
@@ -332,6 +346,8 @@ class Blackjack:
 
         Returns: N/A
         """
+        #TODO
+
         pass
 
 
@@ -342,9 +358,17 @@ class Blackjack:
         increase the value of your initial bet by up to 100 per cent.
         You can only double down on your initial turn and it doubles your bet.
 
-        Returns:
+        Returns: N/A
         """
-        pass
+
+        new_purse = self.player_purse - self.pot
+
+        if new_purse < 0:
+            print("\nCannot double down, doubling the bet would make purse balance negative")
+            self.current_action()
+
+        self.player_purse = new_purse
+        self.pot = self.pot * 2
 
 
     def player_isBust(self):
