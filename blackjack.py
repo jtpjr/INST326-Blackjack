@@ -71,6 +71,12 @@ class Blackjack:
         self.player_isStand = False
         self.dealer_isStand = False
 
+        # Variable for if player has split
+        self.player_isSplit = False
+        self.player_secondHand = list()
+        self.player_secondCount = 0
+        self.player_secondStand = False
+
         # Sets dealer_count and player_count to 0, which tracks current quantity of card's value for each hand
         self.player_count = 0
         self.dealer_count = 0
@@ -121,7 +127,7 @@ class Blackjack:
             # Cards are drawn
             for i in range(0, 2):
                 player_card = self.draw()
-                if player_card[1] == 14:
+                if player_card[2] == "Ace":
                     print("\nYou drew an ace. Would you like it to be a 1 or 11?")
                     while True:
                         player_input = int(input())
@@ -139,6 +145,7 @@ class Blackjack:
             while self.game_state is True:
                 # If player is not standing, prompt player with dashboard
                 if self.player_isStand is False and self.player_isBust() is False and self.game_state is True:
+                    print("\nYour Turn")
                     self.player_round()
 
                 # Check if player hand is bust, if so change game state
@@ -147,6 +154,7 @@ class Blackjack:
 
                 # If dealer is not standing, run dealer round
                 if self.dealer_isStand is False and self.dealer_isBust() is False and self.game_state is True:
+                    print("\nDealer's Turn")
                     self.dealer_round()
 
                 # Check if dealer hand is bust, if so change game state
@@ -159,31 +167,62 @@ class Blackjack:
 
                 self.turn_count += 1
 
+            # Victory evaluation
             while self.game_state is False:
-                if self.player_count == self.dealer_count and self.player_count < 21:
-                    print("Tie, pot is split")
-                    self.player_purse += (self.pot / 2)
-                    self.pot = 0
-                    break
-                elif self.player_isBust() or 21 >= self.dealer_count > self.player_count:
-                    if self.player_isBust():
-                        print("Player busts")
-                    else:
-                        print("Dealer's hand has higher value than player's hand")
+                if self.player_isSplit is False:
+                    if self.player_count == self.dealer_count and self.player_count < 21:
+                        print("Tie, pot is split")
+                        self.player_purse += (self.pot / 2)
+                        self.pot = 0
+                        break
+                    elif self.player_isBust() or 21 >= self.dealer_count > self.player_count:
+                        if self.player_isBust():
+                            print("Player busts")
+                        else:
+                            print("Dealer's hand has higher value than player's hand")
 
-                    print("\nDealer wins")
-                    self.pot = 0
-                    break
+                        print("\nDealer wins")
+                        self.pot = 0
+                        break
+                    else:
+                        if self.dealer_isBust():
+                            print("Dealer busts")
+                        else:
+                            print("Player's hand has higher value than dealer's hand")
+
+                        print("\nPlayer wins")
+                        self.player_purse += (2 * self.pot)
+                        self.pot = 0
+                        break
                 else:
-                    if self.dealer_isBust():
+                    if self.dealer_count == self.player_count == self.player_secondStand:
+                        print("All hands tie, pot is split")
+                        self.player_purse += (self.pot / 2)
+                        self.pot = 0
+                        break
+                    elif self.dealer_isBust() and self.player_isBust() is False:
                         print("Dealer busts")
+                        self.player_purse += (2 * self.pot)
+                        self.pot = 0
+                        break
+                    elif self.player_isBust() and self.dealer_isBust() is False:
+                        print("Player busts on both hands")
+                        self.pot = 0
+                        break
+                    elif self.dealer_count > self.player_count and self.dealer_count > self.player_secondCount:
+                        print("Dealer's hand has higher value than both player's hands")
+                        self.pot = 0
+                        break
+                    elif (self.dealer_count < self.player_count and self.dealer_count > self.player_secondCount) or (self.dealer_count > self.player_count and self.dealer_count < self.player_secondCount):
+                        print("One of player's hands beats dealer's hand")
+                        self.player_purse += self.pot
+                        self.pot = 0
+                        break
                     else:
-                        print("Player's hand has higher value than dealer's hand")
-
-                    print("\nPlayer wins")
-                    self.player_purse += (2 * self.pot)
-                    self.pot = 0
-                    break
+                        print("Both of player's hands beat dealer's hand")
+                        self.player_purse += (2 * self.pot)
+                        self.pot = 0
+                        break
 
             while True:
                 print("\nPlay again? (y/n)")
@@ -198,8 +237,12 @@ class Blackjack:
                     self.player_isStand = False
                     self.dealer_isStand = False
                     self.player_count = 0
+                    self.player_secondCount = 0
                     self.dealer_count = 0
                     self.instance_deck.clear()
+                    self.player_isSplit = False
+                    self.player_secondHand.clear()
+                    self.player_secondStand = False
 
                     for i in self.master_deck:
                         self.instance_deck.append(i)
@@ -225,8 +268,6 @@ class Blackjack:
         Returns: N/A
         """
 
-        print("\nYour Turn")
-
         # Print current hand
         print("\nCurrent hand: ")
         self.player_count = 0
@@ -236,6 +277,16 @@ class Blackjack:
             self.player_count += self.player_hand[i][1]
 
         print(f"Current Total: {self.player_count}")
+
+        if self.player_isSplit:
+            print("\nSecond hand: ")
+            self.player_secondCount = 0
+
+            for i in range(0, len(self.player_secondHand)):
+                print(f"{self.player_secondHand[i][2]} of {self.player_secondHand[i][0]}")
+                self.player_secondCount += self.player_secondHand[i][1]
+
+            print(f"Current Total: {self.player_secondCount}")
 
         if self.player_isBust():
             self.game_state = False
@@ -254,7 +305,20 @@ class Blackjack:
         print(f"\nPot: {self.pot}")
         print(f"Your Purse: {self.player_purse}")
 
-        self.current_action()
+        if self.player_isSplit is False:
+            self.current_action()
+        else:
+            if self.player_count > 21:
+                print("\nFirst hand is bust, skipping")
+            else:
+                self.current_action()
+
+            if self.player_secondCount > 21:
+                #TODO
+                print("\nSecond hand is bust, skipping")
+            else:
+                self.second_action()
+
 
     def current_action(self):
         """
@@ -269,8 +333,8 @@ class Blackjack:
         print("[1] Hit")
         print("[2] Stand")
 
-        # TODO: Add handling to prompt for a split if the condition is right
-        # print("[3] Split")
+        if self.turn_count == 1 and self.player_hand[0][1] == self.player_hand[1][1]:
+            print("[3] Split")
 
         if self.turn_count == 1:
             print("[4] Double-down")
@@ -279,15 +343,43 @@ class Blackjack:
             print("\nEnter corresponding number below: ")
             player_input = int(input())
 
-            # TODO: Add handling to prompt for a split if the condition is right
             if player_input == 1:
-                self.player_hit()
+                self.player_hit(self.player_hand)
                 break
             elif player_input == 2:
                 self.player_stand()
                 break
+            elif player_input == 3 and self.turn_count == 1 and self.player_hand[0][1] == self.player_hand[1][1]:
+                self.player_split()
+                break
             elif player_input == 4 and self.turn_count == 1:
                 self.player_double_down()
+                break
+            else:
+                print("Input was invalid, please try again")
+
+    def second_action(self):
+        """
+        Prints current actions for player. Makes determination as to which actions are available, prompts user for input,
+        verifies input, and executes corresponding action. This is for the second hand when split
+
+        Returns: N/A
+        """
+
+        # Determine player action
+        print("\nWhat is your action?")
+        print("[1] Hit")
+        print("[2] Stand")
+
+        while True:
+            print("\nEnter corresponding number below: ")
+            player_input = int(input())
+
+            if player_input == 1:
+                self.player_hit(self.player_secondHand)
+                break
+            elif player_input == 2:
+                self.player_secondStand = True
                 break
             else:
                 print("Input was invalid, please try again")
@@ -312,13 +404,16 @@ class Blackjack:
             print("\nBet exceeds current purse or is 0, try again")
 
 
-    def player_hit(self):
+    def player_hit(self, hand):
         """
         Player hits, which is to draw a card from the deck and add it to their current hand
         in an attempt to get as close to 21 as possible.
         If they player recieves an ace card on their hit,
         they decide if they want it as a 1 or 11 if mathematically possible,
         given the other cards in their hand.
+
+        Args:
+            hand: Which hand (list) will the card be appended to
 
         Returns: N/A
         """
@@ -345,7 +440,7 @@ class Blackjack:
                     print("\nInputted value is not a 1 or 11, try again")
 
         print(f"You drew a {new_card[2]} of {new_card[0]}")
-        self.player_hand.append(new_card)
+        hand.append(new_card)
 
 
 
@@ -372,7 +467,14 @@ class Blackjack:
         """
         #TODO
 
-        pass
+        self.player_isSplit = True
+
+        # Add one card to second hand
+        self.player_secondHand.append(self.player_hand.pop())
+
+        # Double bet
+        self.pot = self.pot * 2
+        self.player_purse -= self.pot / 2
 
 
     def player_double_down(self):
@@ -404,7 +506,11 @@ class Blackjack:
         Returns: Returns true if players hand is busted and false if not.
         """
 
-        return self.player_count > 21
+        if self.player_isSplit is False:
+            return self.player_count > 21
+        else:
+            if self.player_secondCount > 21 and self.player_count > 21:
+                return True
 
     def dealer_round(self):
         """
@@ -416,8 +522,6 @@ class Blackjack:
 
         Returns: NaN
         """
-
-        print("\nDealer's Turn")
 
         # Checks if first 2 cards received are Aces, and if so, set to 11 value
         for i in range(0, len(self.dealer_hand)):
