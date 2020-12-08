@@ -1,3 +1,5 @@
+import sys
+from argparse import ArgumentParser
 from random import shuffle
 
 class Deck:
@@ -592,12 +594,16 @@ class Blackjack:
 
         return self.dealer_count > 21
 
+def parse_args(arglist):
+    """ Parse command-line arguments. """
+    parser = ArgumentParser()
+    parser.add_argument("buy_in", help="The amount to buy in with", default=250, type=int)
+    return parser.parse_args(arglist)
 
-class Blackjack_Test:
+if __name__ == '__main__':
+    args = parse_args(sys.argv[1:])
 
-    if __name__ == '__main__':
-        new_game = Blackjack()
+    Blackjack(args.buy_in).game()
 
-        new_game.game()
 
 
