@@ -227,6 +227,10 @@ class Blackjack:
                         break
 
             while True:
+                if self.player_purse == 0:
+                    print("\nRan out of money, game over")
+                    quit()
+
                 print("\nPlay again? (y/n)")
                 player_input = str(input())
 
@@ -421,7 +425,8 @@ class Blackjack:
         """
 
         # Calls for player to bet
-        self.player_bet()
+        if self.player_purse != 0:
+            self.player_bet()
 
         # Adds top card from deck to player's hand
         new_card = self.draw()
@@ -597,7 +602,7 @@ class Blackjack:
 def parse_args(arglist):
     """ Parse command-line arguments. """
     parser = ArgumentParser()
-    parser.add_argument("buy_in", help="The amount to buy in with", default=250, type=int)
+    parser.add_argument("buy_in", help="The amount to buy in with", default=250, type=int, )
     return parser.parse_args(arglist)
 
 if __name__ == '__main__':
