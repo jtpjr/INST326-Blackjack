@@ -78,6 +78,7 @@ class Blackjack:
         self.player_secondHand = list()
         self.player_secondCount = 0
         self.player_secondStand = False
+        self.player_firstStand = False
 
         # Sets dealer_count and player_count to 0, which tracks current quantity of card's value for each hand
         self.player_count = 0
@@ -249,6 +250,7 @@ class Blackjack:
                     self.player_isSplit = False
                     self.player_secondHand.clear()
                     self.player_secondStand = False
+                    self.player_firstStand = False
 
                     for i in self.master_deck:
                         self.instance_deck.append(i)
@@ -316,12 +318,16 @@ class Blackjack:
         else:
             if self.player_count > 21:
                 print("\nFirst hand is bust, skipping")
+            elif self.player_firstStand:
+                print("\nFirst hand is currently standing, skipping")
             else:
                 self.current_action()
 
             if self.player_secondCount > 21:
                 #TODO
                 print("\nSecond hand is bust, skipping")
+            elif self.player_secondStand:
+                print("\nSecond hand is currently standing, skipping")
             else:
                 self.second_action()
 
@@ -353,9 +359,12 @@ class Blackjack:
                 self.player_hit(self.player_hand)
                 break
             elif player_input == 2:
-                self.player_stand()
+                if self.player_isSplit is False:
+                    self.player_stand()
+                else:
+                    self.player_firstStand = True
                 break
-            elif player_input == 3 and self.turn_count == 1 and self.player_hand[0][1] == self.player_hand[1][1]:
+            elif player_input == 3 and self.turn_count == 1:
                 self.player_split()
                 break
             elif player_input == 4 and self.turn_count == 1:
@@ -461,7 +470,10 @@ class Blackjack:
         Returns: N/A
         """
 
-        self.player_isStand = True
+        if self.player_isSplit is False:
+            self.player_isStand = True
+        elif self.player_firstStand and self.player_secondStand:
+            self.player_isStand = True
 
 
 
