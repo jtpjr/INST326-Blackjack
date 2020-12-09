@@ -139,7 +139,7 @@ class Blackjack:
 
                         print("Input invalid, please try again")
 
-
+                self.player_hand.append(player_card)
                 self.dealer_hand.append(self.draw())
 
             while self.game_state is True:
