@@ -2,6 +2,7 @@ import sys
 from argparse import ArgumentParser
 from random import shuffle
 
+
 class Deck:
     """
     This is a deck of playing cards, as a list of tuples (suit, value, name)
@@ -49,6 +50,7 @@ class Blackjack:
     which actions to take against the player, and the player can make the standard array of actions as per the rules
     of blackjack.
     """
+
     def __init__(self, buy_in=250):
         """
         Constructor for the Blackjack game. Creates a multitude of variables for tracking various gamestates, as well as
@@ -104,7 +106,6 @@ class Blackjack:
         self.player_hand = list()
         self.dealer_hand = list()
 
-
     def draw(self):
         """
         Draws the first card in the deck, from the Instance deck created in the constructor.
@@ -153,12 +154,11 @@ class Blackjack:
                     self.game_state = False
 
                 # If player is not standing, prompt player with dashboard
-                if (self.player_isSplit is False and self.player_isStand is False and self.player_isBust() is False and self.game_state is True) or (self.player_isSplit is True and self.player_isStand is False and self.player_isBust() is False and self.game_state is True):
+                if (
+                        self.player_isSplit is False and self.player_isStand is False and self.player_isBust() is False and self.game_state is True) or (
+                        self.player_isSplit is True and self.player_isStand is False and self.player_isBust() is False and self.game_state is True):
                     print("\nYour Turn")
                     self.player_round()
-
-
-
 
                 # Check if player hand is bust, if so change game state
                 if self.player_isBust():
@@ -166,7 +166,8 @@ class Blackjack:
 
                 # If dealer is not standing, run dealer round
                 if self.dealer_isStand is False and self.dealer_isBust() is False and self.game_state is True:
-                    if self.player_isSplit is True and (len(self.player_hand) == 1 and len(self.player_secondHand) == 1):
+                    if self.player_isSplit is True and (
+                            len(self.player_hand) == 1 and len(self.player_secondHand) == 1):
                         continue
                     print("\nDealer's Turn")
                     self.dealer_round()
@@ -174,8 +175,6 @@ class Blackjack:
                 # Check if dealer hand is bust, if so change game state
                 if self.dealer_isBust():
                     self.game_state = False
-
-
 
                 self.turn_count += 1
 
@@ -225,27 +224,37 @@ class Blackjack:
                         print("Dealer's hand has higher value than both player's hands")
                         self.pot = 0
                         break
-                    elif (self.dealer_count < self.player_count <= 21) or (self.dealer_count < self.player_secondCount <= 21):
+                    elif (self.dealer_count < self.player_count <= 21) or (
+                            self.dealer_count < self.player_secondCount <= 21):
                         print("One of player's hands beats dealer's hand")
                         self.player_purse += self.pot
                         self.pot = 0
                         break
-                    elif (self.player_count == self.dealer_count and self.player_secondCount < self.dealer_count <= 21) or (self.player_count < self.dealer_count <= 21 and self.player_secondCount == self.dealer_count):
-                        print("One of player's hands ties, and second hand is less than dealer hand. Player wins 1/4 of pot")
+                    elif (
+                            self.player_count == self.dealer_count and self.player_secondCount < self.dealer_count <= 21) or (
+                            self.player_count < self.dealer_count <= 21 and self.player_secondCount == self.dealer_count):
+                        print(
+                            "One of player's hands ties, and second hand is less than dealer hand. Player wins 1/4 of pot")
                         self.player_purse += (self.pot / 4)
                         self.pot = 0
                         break
-                    elif (self.player_count == self.dealer_count and 21 >= self.player_secondCount > self.dealer_count) or (21 >= self.player_count > self.dealer_count and self.player_secondCount == self.dealer_count):
-                        print("One of player's hands ties, and second hand is greater than dealer hand. Player wins 3/4 of pot")
+                    elif (
+                            self.player_count == self.dealer_count and 21 >= self.player_secondCount > self.dealer_count) or (
+                            21 >= self.player_count > self.dealer_count and self.player_secondCount == self.dealer_count):
+                        print(
+                            "One of player's hands ties, and second hand is greater than dealer hand. Player wins 3/4 of pot")
                         self.player_purse += (self.pot * .75)
                         self.pot = 0
                         break
-                    elif (self.player_count > 21 and self.player_secondCount < self.dealer_count <= 21) or (self.player_secondCount > 21 and self.player_count < self.dealer_count <= 21):
+                    elif (self.player_count > 21 and self.player_secondCount < self.dealer_count <= 21) or (
+                            self.player_secondCount > 21 and self.player_count < self.dealer_count <= 21):
                         print("One of player's hands busted, and the second hand is less than dealer's hand. No reward")
                         self.pot = 0
                         break
-                    elif (self.player_count > 21 and self.player_secondCount < self.dealer_count <= 21) or (self.player_secondCount > 21 and self.player_count < self.dealer_count <= 21):
-                        print("One of player's hands busted, and the second hand is greater than dealer's hand. 1/4 pot rewarded")
+                    elif (self.player_count > 21 and self.player_secondCount < self.dealer_count <= 21) or (
+                            self.player_secondCount > 21 and self.player_count < self.dealer_count <= 21):
+                        print(
+                            "One of player's hands busted, and the second hand is greater than dealer's hand. 1/4 pot rewarded")
                         self.player_purse += (self.pot / 4)
                         self.pot = 0
                         break
@@ -293,8 +302,6 @@ class Blackjack:
 
                 print("\nInputted value is not a y or n, try again")
 
-
-
     def player_round(self):
         """
         Dashboard for player to make actions. Prints current hand, status of pot and purse, and dealer's hand (flipped
@@ -328,7 +335,6 @@ class Blackjack:
             self.game_state = False
             return
 
-
         # Print dealer's hand
         print("\nDealer's hand: ")
         for i in range(0, len(self.dealer_hand)):
@@ -344,7 +350,8 @@ class Blackjack:
         if self.player_isSplit is False:
             self.current_action()
         else:
-            if (self.player_count > 21 or self.player_firstStand) and (self.player_secondCount > 21 or self.player_secondStand) or self.player_isBust() or self.player_isStand:
+            if (self.player_count > 21 or self.player_firstStand) and (
+                    self.player_secondCount > 21 or self.player_secondStand) or self.player_isBust() or self.player_isStand:
                 return
 
             if self.player_count > 21:
@@ -366,9 +373,6 @@ class Blackjack:
 
             if self.player_firstStand is True and self.player_secondStand is True:
                 self.player_stand()
-
-
-
 
     def current_action(self):
         """
@@ -465,7 +469,6 @@ class Blackjack:
 
             print("\nBet exceeds current purse or is 0, try again")
 
-
     def player_hit(self, hand):
         """
         Player hits, which is to draw a card from the deck and add it to their current hand
@@ -505,8 +508,6 @@ class Blackjack:
         print(f"You drew a {new_card[2]} of {new_card[0]}")
         hand.append(new_card)
 
-
-
     def player_stand(self):
         """
         Sets player_isStand condition to True, passing turns
@@ -524,8 +525,6 @@ class Blackjack:
         else:
             return False
 
-
-
     def player_split(self):
         """
         Handling to allow the player to split current hand in two,
@@ -542,7 +541,6 @@ class Blackjack:
         # Double bet
         self.pot = self.pot * 2
         self.player_purse -= self.pot / 2
-
 
     def player_double_down(self):
         """
@@ -562,7 +560,6 @@ class Blackjack:
 
         self.player_purse = new_purse
         self.pot = self.pot * 2
-
 
     def player_isBust(self):
         """
@@ -597,7 +594,6 @@ class Blackjack:
             if self.dealer_hand[i][1] == 14:
                 self.dealer_hand[i][1] = 11
 
-
         self.dealer_count = 0
 
         # Assess dealer count
@@ -613,8 +609,8 @@ class Blackjack:
         if self.dealer_count <= 16:
             self.dealer_hit()
 
-            if self.dealer_hand[len(self.dealer_hand)-1][1] == 14:
-                self.dealer_hand[len(self.dealer_hand)-1][1] = 11
+            if self.dealer_hand[len(self.dealer_hand) - 1][1] == 14:
+                self.dealer_hand[len(self.dealer_hand) - 1][1] = 11
             return
 
             # If total is over 21, check for aces and change value from 11 to 1
@@ -627,7 +623,6 @@ class Blackjack:
             self.dealer_stand()
             return
 
-
     def dealer_hit(self):
         """
         Dealer hits, which is to draw a card from the deck and add it to current hand.
@@ -639,8 +634,6 @@ class Blackjack:
 
         new_card = self.draw()
         self.dealer_hand.append(new_card)
-
-
 
     def dealer_stand(self):
         """
@@ -664,16 +657,15 @@ class Blackjack:
 
         return self.dealer_count > 21
 
+
 def parse_args(arglist):
     """ Parse command-line arguments. """
     parser = ArgumentParser()
     parser.add_argument("buy_in", help="The amount to buy in with", default=250, type=int, )
     return parser.parse_args(arglist)
 
+
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
 
     Blackjack(args.buy_in).game()
-
-
-
