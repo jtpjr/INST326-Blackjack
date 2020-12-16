@@ -45,10 +45,10 @@ class Deck:
 
 class Blackjack:
     """
-    This class creates a command line game of blackjack against the computer (player vs dealer(CPU)). This class utilizes
-    the Deck class above to populate the deck of cards used in the game. The computer uses an algorithm to determine
-    which actions to take against the player, and the player can make the standard array of actions as per the rules
-    of blackjack.
+    This class creates a command line game of blackjack against the computer (player vs dealer(CPU)). This class
+    utilizes the Deck class above to populate the deck of cards used in the game. The computer uses an algorithm to
+    determine which actions to take against the player, and the player can make the standard array of actions as per
+    the rules of blackjack.
     """
 
     def __init__(self, buy_in=250):
@@ -155,8 +155,10 @@ class Blackjack:
 
                 # If player is not standing, prompt player with dashboard
                 if (
-                        self.player_isSplit is False and self.player_isStand is False and self.player_isBust() is False and self.game_state is True) or (
-                        self.player_isSplit is True and self.player_isStand is False and self.player_isBust() is False and self.game_state is True):
+                        self.player_isSplit is False and self.player_isStand is False and self.player_isBust() is False
+                        and self.game_state is True) or (
+                        self.player_isSplit is True and self.player_isStand is False and self.player_isBust() is False
+                        and self.game_state is True):
                     print("\nYour Turn")
                     self.player_round()
 
@@ -231,18 +233,24 @@ class Blackjack:
                         self.pot = 0
                         break
                     elif (
-                            self.player_count == self.dealer_count and self.player_secondCount < self.dealer_count <= 21) or (
-                            self.player_count < self.dealer_count <= 21 and self.player_secondCount == self.dealer_count):
+                            self.player_count == self.dealer_count and self.player_secondCount <
+                            self.dealer_count <= 21) or (
+                            self.player_count < self.dealer_count <= 21 and self.player_secondCount ==
+                            self.dealer_count):
                         print(
-                            "One of player's hands ties, and second hand is less than dealer hand. Player wins 1/4 of pot")
+                            "One of player's hands ties, and second hand is less than dealer hand. "
+                            "Player wins 1/4 of pot")
                         self.player_purse += (self.pot / 4)
                         self.pot = 0
                         break
                     elif (
-                            self.player_count == self.dealer_count and 21 >= self.player_secondCount > self.dealer_count) or (
-                            21 >= self.player_count > self.dealer_count and self.player_secondCount == self.dealer_count):
+                            self.player_count == self.dealer_count and 21 >= self.player_secondCount >
+                            self.dealer_count) or (
+                            21 >= self.player_count > self.dealer_count and self.player_secondCount ==
+                            self.dealer_count):
                         print(
-                            "One of player's hands ties, and second hand is greater than dealer hand. Player wins 3/4 of pot")
+                            "One of player's hands ties, and second hand is greater than dealer hand. "
+                            "Player wins 3/4 of pot")
                         self.player_purse += (self.pot * .75)
                         self.pot = 0
                         break
@@ -254,7 +262,8 @@ class Blackjack:
                     elif (self.player_count > 21 and self.player_secondCount < self.dealer_count <= 21) or (
                             self.player_secondCount > 21 and self.player_count < self.dealer_count <= 21):
                         print(
-                            "One of player's hands busted, and the second hand is greater than dealer's hand. 1/4 pot rewarded")
+                            "One of player's hands busted, and the second hand is greater than dealer's hand. 1/4 pot "
+                            "rewarded")
                         self.player_purse += (self.pot / 4)
                         self.pot = 0
                         break
@@ -351,7 +360,8 @@ class Blackjack:
             self.current_action()
         else:
             if (self.player_count > 21 or self.player_firstStand) and (
-                    self.player_secondCount > 21 or self.player_secondStand) or self.player_isBust() or self.player_isStand:
+                    self.player_secondCount > 21 or self.player_secondStand) or self.player_isBust() or \
+                    self.player_isStand:
                 return
 
             if self.player_count > 21:
@@ -376,8 +386,8 @@ class Blackjack:
 
     def current_action(self):
         """
-        Prints current actions for player. Makes determination as to which actions are available, prompts user for input,
-        verifies input, and executes corresponding action.
+        Prints current actions for player. Makes determination as to which actions are available, prompts user for
+        input,verifies input, and executes corresponding action.
 
         Returns: N/A
         """
@@ -422,8 +432,8 @@ class Blackjack:
 
     def second_action(self):
         """
-        Prints current actions for player. Makes determination as to which actions are available, prompts user for input,
-        verifies input, and executes corresponding action. This is for the second hand when split
+        Prints current actions for player. Makes determination as to which actions are available, prompts user for
+        input, verifies input, and executes corresponding action. This is for the second hand when split
 
         Returns: N/A
         """
@@ -462,7 +472,7 @@ class Blackjack:
             except ValueError:
                 continue
 
-            if player_bet <= self.player_purse and player_bet > 0:
+            if self.player_purse >= player_bet > 0:
                 self.pot += player_bet
                 self.player_purse -= player_bet
                 return
