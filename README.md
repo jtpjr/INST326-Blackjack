@@ -21,9 +21,11 @@ Files:
     and an annotated bibliography of all sources we used to develop the project. 
 
 Instructions on Running Program:
-    Our game of blackjack is controlled and played in the command line. First, you enter
-    "python3 blackjack.py X" in the command line if you have Mac or Linux, or you enter
-    "python blackjack.py X" in command line, if you are on windows. Be sure to substitute "X" for a numeric value for your buy-in.
+    Our game of blackjack is controlled and played in the command line. For Mac/Linux:
+        "python3 blackjack.py X" 
+    For Windows:
+        "python blackjack.py X"
+    in command line. Be sure to substitute "X" for a numeric value for your buy-in.
     Then, it will ask you to place a bet for the specific round and it will start from there. And then, as the game goes on it will keep
     asking you what move you would like to make based on the certain situation you are in, and to do so
     you enter the number into the command line that corresponds with the options shown to you. Finally, you just keep playing until you lose all your money or if you are winning and just want to stop.
